@@ -141,7 +141,8 @@
   </div>
 
   <script>
-    // --- IMPORTANT: PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE ---
+    // --- CONFIGURATION ---
+    // PASTE YOUR DEPLOYED WEB APP URL HERE
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxX3djwI2NJ2An9vfUfuUAECxqOazCM2MVwNP6VohIA_7E4PZRR1jtGtVLMV1sVTGR4-Q/exec'; 
 
     // --- UPLOAD HANDLERS ---
@@ -190,10 +191,10 @@
       submitBtn.disabled = true;
 
       try {
-        // 1. Process Resume
+        // 1. Convert File to Base64
         const resumeB64 = await toBase64(resumeInput.files[0]);
 
-        // 2. Process Other Docs (Loop)
+        // 2. Convert Other Docs (Loop)
         let otherDocsArray = [];
         for (let i = 0; i < otherInput.files.length; i++) {
            const file = otherInput.files[i];
@@ -216,27 +217,35 @@
           other_docs: otherDocsArray
         };
 
-        // 4. Send (no-cors mode is default for GAS if simple post, but let's try standard)
-        // If you get CORS errors, we rely on the GAS side returning correct headers 
-        // or we use 'no-cors' mode (which is opaque but works for submission)
-        await fetch(SCRIPT_URL, {
+        // 4. Send to Google Apps Script
+        const response = await fetch(SCRIPT_URL, {
           method: 'POST',
           body: JSON.stringify(payload)
         });
 
-        alert("Application & Documents Uploaded Successfully!");
-        form.reset();
-        resumeFeedback.style.display = 'none';
-        otherFeedback.style.display = 'none';
+        // 5. Check Response
+        const result = await response.json();
+        
+        if (result.status === 'success') {
+          alert("Application & Documents Uploaded Successfully!");
+          form.reset();
+          resumeFeedback.style.display = 'none';
+          otherFeedback.style.display = 'none';
+        } else {
+          // This will show the EXACT error from the server (e.g. "Folder ID Invalid")
+          throw new Error(result.message || "Unknown server error");
+        }
 
       } catch (err) {
-        alert("Error: " + err.message);
+        console.error(err);
+        alert("Submission Failed: " + err.message);
       } finally {
         loadingOverlay.style.display = 'none';
         submitBtn.disabled = false;
       }
     });
 
+    // Helper: File to Base64
     const toBase64 = file => new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
