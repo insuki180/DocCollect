@@ -1,0 +1,18 @@
+{
+  "techcorp": {
+    "companyName": "TechCorp Solutions",
+    "formTitle": "Candidate Application Form",
+    "logoUrl": "logos/techcorp.png",
+    "primaryColor": "#2563eb",
+    "scriptUrl": "https://script.google.com/macros/s/AKfycbTechcorp123/exec",
+    "apiKey": "TC_2026_secureKey_8f3k2"
+  },
+  "abc": {
+    "companyName": "ABC Pvt Ltd",
+    "formTitle": "We Are Hiring",
+    "logoUrl": "logos/abc.png",
+    "primaryColor": "#e11d48",
+    "scriptUrl": "https://script.google.com/macros/s/AKfycbABC456/exec",
+    "apiKey": "ABC_2026_secureKey_91js2"
+  }
+}
