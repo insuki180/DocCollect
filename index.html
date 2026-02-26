@@ -431,11 +431,16 @@ const result = await response.json();
 
 progressFill.style.width='100%';
 
-/* Since no-cors hides response, assume success */
-document.getElementById("formContainer").style.display='none';
-document.getElementById("successScreen").style.display='block';
-document.getElementById("successMessage").innerText=
-`Thank you for applying to ${document.getElementById("companyName").innerText}.`;
+if (result.status === 'success') {
+
+  document.getElementById("formContainer").style.display='none';
+  document.getElementById("successScreen").style.display='block';
+  document.getElementById("successMessage").innerText =
+    `Thank you for applying to ${document.getElementById("companyName").innerText}.`;
+
+} else {
+  throw new Error(result.message || "Submission failed");
+}
 
 }catch(err){
 alert("Submission Failed: "+err.message);
@@ -454,4 +459,5 @@ reader.onerror=reject;
 
 </body>
 </html>
+
 
