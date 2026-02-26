@@ -1,258 +1,449 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DocCollect HR – Candidate Application</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>DocCollect HR</title>
 
-  <style>
-    :root {
-      --primary-color: #2563eb;
-      --success-color: #10b981;
-      --bg-color: #f4f6f8;
-      --card-bg: #ffffff;
-      --text-main: #1f2937;
-      --text-muted: #6b7280;
-      --border-color: #e5e7eb;
-    }
+<style>
+:root{
+--primary-color:#2563eb;
+--success-color:#10b981;
+--bg:#f4f6f8;
+--card:#ffffff;
+--text:#1f2937;
+--muted:#6b7280;
+--border:#e5e7eb;
+}
 
-    body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg-color); color: var(--text-main); padding: 20px; line-height: 1.5; }
-    .container { max-width: 600px; margin: 0 auto; background: var(--card-bg); padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); }
-    
-    .header { text-align: center; margin-bottom: 30px; }
-    .header h1 { margin: 0; font-size: 24px; color: var(--text-main); font-weight: 700; }
-    .header p { margin: 5px 0 0; color: var(--text-muted); font-size: 14px; }
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+background:var(--bg);
+padding:15px;
+line-height:1.5;
+}
 
-    .form-section { margin-bottom: 30px; }
-    .section-title { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
+.container{
+max-width:650px;
+margin:auto;
+background:var(--card);
+padding:25px;
+border-radius:16px;
+box-shadow:0 8px 25px rgba(0,0,0,.06);
+}
 
-    label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px; color: #374151; }
-    input[type="text"], input[type="email"], input[type="tel"], input[type="url"], select { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 15px; background-color: #fff; box-sizing: border-box; transition: all 0.2s; }
-    input:focus, select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+/* Spinner Overlay */
+#loadingOverlay{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(255,255,255,.95);
+z-index:1000;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+}
 
-    .upload-container { position: relative; margin-bottom: 20px; }
-    .upload-input { position: absolute; width: 0.1px; height: 0.1px; opacity: 0; overflow: hidden; z-index: -1; }
-    .upload-label { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 25px; border: 2px dashed var(--border-color); border-radius: 10px; background-color: #fafafa; cursor: pointer; transition: all 0.3s ease; text-align: center; }
-    .upload-label:hover { border-color: var(--primary-color); background-color: #f0f7ff; }
-    .upload-icon { width: 40px; height: 40px; margin-bottom: 10px; fill: var(--primary-color); }
-    .file-feedback { display: none; margin-top: 10px; padding: 10px 15px; background-color: #ecfdf5; border: 1px solid #d1fae5; border-radius: 8px; font-size: 14px; color: #065f46; align-items: center; }
+.spinner{
+border:4px solid #f3f3f3;
+border-top:4px solid var(--primary-color);
+border-radius:50%;
+width:45px;
+height:45px;
+animation:spin 1s linear infinite;
+margin-bottom:15px;
+}
+@keyframes spin{
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+}
 
-    button.submit-btn { width: 100%; padding: 15px; background-color: var(--primary-color); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2); transition: background-color 0.2s; }
-    button.submit-btn:hover { background-color: #1d4ed8; }
-    button:disabled { background-color: #9ca3af; cursor: not-allowed; }
+.header{text-align:center;margin-bottom:25px;}
+.header img{max-height:60px;max-width:200px;object-fit:contain;margin-bottom:12px;}
+.header h1{margin:0;font-size:20px;font-weight:700;}
+.header p{margin:4px 0 0;color:var(--muted);font-size:13px;}
 
-    #loadingOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 1000; align-items: center; justify-content: center; flex-direction: column; }
-    .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-color); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 15px; }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .footer { text-align: center; margin-top: 25px; font-size: 12px; color: #9ca3af; }
-  </style>
+.section-title{
+font-size:12px;
+text-transform:uppercase;
+letter-spacing:1px;
+font-weight:700;
+color:var(--muted);
+margin:25px 0 12px;
+border-bottom:1px solid var(--border);
+padding-bottom:6px;
+}
+
+label{
+display:block;
+font-size:13px;
+font-weight:600;
+margin-top:14px;
+margin-bottom:6px;
+}
+
+input,select{
+width:100%;
+padding:13px;
+border:1px solid var(--border);
+border-radius:12px;
+font-size:15px;
+box-sizing:border-box;
+}
+
+input:focus,select:focus{
+outline:none;
+border-color:var(--primary-color);
+box-shadow:0 0 0 3px rgba(37,99,235,.1);
+}
+
+.flex-row{display:flex;gap:12px;}
+.flex-row>div{flex:1;}
+
+.upload-input{display:none;}
+
+.upload-label{
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+padding:25px;
+border:2px dashed var(--border);
+border-radius:14px;
+background:#fafafa;
+text-align:center;
+cursor:pointer;
+transition:.25s;
+}
+
+.upload-label.dragover{
+border-color:var(--primary-color);
+background:#f0f7ff;
+}
+
+.file-feedback{
+display:none;
+margin-top:10px;
+padding:10px 15px;
+background:#ecfdf5;
+border:1px solid #d1fae5;
+border-radius:8px;
+font-size:13px;
+color:#065f46;
+}
+
+.progress-container{
+display:none;
+margin-top:20px;
+}
+
+.progress-bar{
+height:10px;
+background:#e5e7eb;
+border-radius:6px;
+overflow:hidden;
+}
+
+.progress-fill{
+height:100%;
+width:0%;
+background:var(--primary-color);
+transition:width .3s ease;
+}
+
+.submit-btn{
+margin-top:25px;
+width:100%;
+padding:16px;
+background:var(--primary-color);
+color:#fff;
+border:none;
+border-radius:14px;
+font-size:16px;
+font-weight:700;
+cursor:pointer;
+}
+
+.submit-btn:disabled{
+background:#9ca3af;
+cursor:not-allowed;
+}
+
+.success-screen{
+display:none;
+text-align:center;
+padding:40px 20px;
+}
+
+.success-screen h2{
+color:var(--success-color);
+margin-bottom:10px;
+}
+
+.success-screen button{
+margin-top:20px;
+padding:12px 20px;
+border:none;
+background:var(--primary-color);
+color:#fff;
+border-radius:10px;
+font-weight:600;
+}
+
+.footer{text-align:center;margin-top:18px;font-size:12px;color:#9ca3af;}
+</style>
 </head>
 <body>
 
-  <div id="loadingOverlay">
-    <div class="spinner"></div>
-    <h3>Submitting Application...</h3>
-    <p style="color: #666; font-size: 14px;">Uploading documents securely.</p>
-  </div>
+<div id="loadingOverlay">
+<div class="spinner"></div>
+<h3>Processing Files...</h3>
+<p style="color:#666;font-size:14px;">Preparing documents securely.</p>
+</div>
 
-  <div class="container">
-    <div class="header">
-      <h1>TechCorp Solutions</h1>
-      <p>Candidate Application Form</p>
-    </div>
+<div class="container">
 
-    <form id="docCollectForm">
-      
-      <div class="form-section">
-        <div class="section-title">Personal Details</div>
-        <label>Full Name *</label>
-        <input type="text" name="name" required placeholder="Enter your full name">
-        <div style="margin-top: 15px;"></div>
-        <label>Mobile Number *</label>
-        <input type="tel" name="phone" required placeholder="e.g. 98765 43210">
-        <div style="margin-top: 15px;"></div>
-        <label>Email ID *</label>
-        <input type="email" name="email" required placeholder="e.g. john@email.com">
-      </div>
+<div id="formContainer">
 
-      <div class="form-section">
-        <div class="section-title">Job & Experience</div>
-        <label>Applying For *</label>
-        <input type="text" name="role" value="Full Stack Developer" placeholder="Enter Job Role">
-        <div style="margin-top: 15px;"></div>
-        <label>Years of Experience *</label>
-        <select id="experience" name="experience" required>
-          <option value="" disabled selected>Select your experience</option>
-          <option value="Fresher">Fresher (0 Years)</option>
-          <option value="0-1">0 - 1 Years</option>
-          <option value="1-3">1 - 3 Years</option>
-          <option value="3-5">3 - 5 Years</option>
-          <option value="5+">5+ Years</option>
-        </select>
-        <div style="margin-top: 15px;"></div>
-        <label>Current Location *</label>
-        <input type="text" name="location" required placeholder="Current City">
-      </div>
+<div class="header">
+<div id="brandLogo"></div>
+<h1 id="companyName"></h1>
+<p id="formTitle"></p>
+</div>
 
-      <div class="form-section" id="professionalSection">
-        <div class="section-title">Professional Details</div>
-        <div style="display: flex; gap: 15px; margin-bottom: 15px;">
-          <div style="flex: 1;"><label>Current CTC (LPA)</label><input type="text" name="current_ctc" placeholder="4.5"></div>
-          <div style="flex: 1;"><label>Expected CTC</label><input type="text" name="expected_ctc" placeholder="6.0"></div>
-        </div>
-        <label>Notice Period</label>
-        <select name="notice_period">
-          <option value="">Select Notice Period</option>
-          <option>Immediate</option>
-          <option>15 Days</option>
-          <option>30 Days</option>
-          <option>60 Days</option>
-          <option>90 Days</option>
-        </select>
-      </div>
+<form id="docCollectForm">
 
-      <div class="form-section">
-        <div class="section-title">Documents</div>
+<div class="section-title">Personal Details</div>
 
-        <label>1. Resume (PDF Only) *</label>
-        <div class="upload-container">
-          <input type="file" id="resumeFile" name="resume" accept="application/pdf" class="upload-input" required>
-          <label for="resumeFile" class="upload-label">
-            <svg class="upload-icon" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
-            <div style="font-weight:600">Upload Resume</div><div style="font-size:12px; color:#6b7280">PDF only (Max 5MB)</div>
-          </label>
-          <div id="resumeFeedback" class="file-feedback">📄 <span id="resumeName"></span></div>
-        </div>
+<label>Full Name *</label>
+<input type="text" name="name" required placeholder="Enter your full name">
 
-        <label>2. Other Documents (Optional)</label>
-        <div class="upload-container">
-          <input type="file" id="otherFiles" name="other_docs" multiple accept=".pdf,.jpg,.jpeg,.png" class="upload-input">
-          <label for="otherFiles" class="upload-label" style="background:#fffbf0; border-style:dotted; border-color:#f59e0b;">
-            <svg class="upload-icon" viewBox="0 0 24 24" style="fill:#d97706"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/></svg>
-            <div style="font-weight:600">Certificates / ID Proof</div><div style="font-size:12px; color:#6b7280">Select multiple files</div>
-          </label>
-          <div id="otherFeedback" class="file-feedback">🗂️ <span id="otherNames"></span></div>
-        </div>
-      </div>
+<label>Mobile Number *</label>
+<input type="tel" name="phone" required placeholder="98765 43210">
 
-      <button type="submit" class="submit-btn" id="submitBtn">Submit Application</button>
-    </form>
-    <div class="footer">Powered by <strong>DocCollect</strong></div>
-  </div>
+<label>Email *</label>
+<input type="email" name="email" required placeholder="john@email.com">
 
-  <script>
-    // --- CONFIGURATION ---
-    // PASTE YOUR DEPLOYED WEB APP URL HERE
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzcTQruDPGztINkCCnAOxd2q5R8P0XpOgf9sfGkcrpjOlBTAsRn4GpaHKAf3qg1spFcnw/exec'; 
+<div class="section-title">Job & Experience</div>
 
-    // --- UPLOAD HANDLERS ---
-    const resumeInput = document.getElementById('resumeFile');
-    const resumeFeedback = document.getElementById('resumeFeedback');
-    const otherInput = document.getElementById('otherFiles');
-    const otherFeedback = document.getElementById('otherFeedback');
+<label>Applying For *</label>
+<input type="text" name="role" placeholder="Full Stack Developer">
 
-    resumeInput.addEventListener('change', function() {
-       if(this.files[0]) {
-         document.getElementById('resumeName').textContent = this.files[0].name;
-         resumeFeedback.style.display = 'flex';
-       }
-    });
+<label>Years of Experience *</label>
+<select id="experience" name="experience" required>
+<option value="">Select</option>
+<option value="Fresher">Fresher (0 Years)</option>
+<option value="0-1">0 - 1 Years</option>
+<option value="1-3">1 - 3 Years</option>
+<option value="3-5">3 - 5 Years</option>
+<option value="5+">5+ Years</option>
+</select>
 
-    otherInput.addEventListener('change', function() {
-       if(this.files.length > 0) {
-         document.getElementById('otherNames').textContent = this.files.length + " files selected";
-         otherFeedback.style.display = 'flex';
-       }
-    });
+<label>Current Location *</label>
+<input type="text" name="location" required placeholder="Current City">
 
-    // --- FRESHER TOGGLE ---
-    document.getElementById('experience').addEventListener('change', function() {
-      const section = document.getElementById('professionalSection');
-      if(this.value === "Fresher") {
-         section.style.opacity = '0.5';
-         section.style.pointerEvents = 'none';
-         section.querySelectorAll('input, select').forEach(i => i.value = "");
-      } else {
-         section.style.opacity = '1';
-         section.style.pointerEvents = 'auto';
-      }
-    });
+<div id="professionalSection">
 
-    // --- SUBMIT LOGIC ---
-    const form = document.getElementById('docCollectForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const loadingOverlay = document.getElementById('loadingOverlay');
+<div class="section-title">Professional Details</div>
 
-    form.addEventListener('submit', async function(e) {
-      e.preventDefault();
-      if(!resumeInput.files[0]) return alert("Resume is required!");
+<div class="flex-row">
+<div>
+<label>Current CTC (LPA)</label>
+<input type="text" name="current_ctc" placeholder="4.5">
+</div>
+<div>
+<label>Expected CTC</label>
+<input type="text" name="expected_ctc" placeholder="6.0">
+</div>
+</div>
 
-      loadingOverlay.style.display = 'flex';
-      submitBtn.disabled = true;
+<label>Notice Period</label>
+<select name="notice_period">
+<option value="">Select Notice Period</option>
+<option>Immediate</option>
+<option>15 Days</option>
+<option>30 Days</option>
+<option>60 Days</option>
+<option>90 Days</option>
+</select>
 
-      try {
-        // 1. Convert File to Base64
-        const resumeB64 = await toBase64(resumeInput.files[0]);
+</div>
 
-        // 2. Convert Other Docs (Loop)
-        let otherDocsArray = [];
-        for (let i = 0; i < otherInput.files.length; i++) {
-           const file = otherInput.files[i];
-           const b64 = await toBase64(file);
-           otherDocsArray.push({ name: file.name, mimeType: file.type, data: b64 });
-        }
+<div class="section-title">Documents</div>
 
-        // 3. Build Payload
-        const payload = {
-          name: form.name.value,
-          phone: form.phone.value,
-          email: form.email.value,
-          role: form.role.value,
-          experience: form.experience.value,
-          location: form.location.value,
-          current_ctc: form.current_ctc.value || '',
-          expected_ctc: form.expected_ctc.value || '',
-          notice_period: form.notice_period.value || '',
-          resume: { name: resumeInput.files[0].name, mimeType: resumeInput.files[0].type, data: resumeB64 },
-          other_docs: otherDocsArray
-        };
+<label>Resume (PDF Only) *</label>
+<input type="file" id="resumeFile" accept="application/pdf" class="upload-input" required>
+<label for="resumeFile" class="upload-label" id="resumeDrop">
+Upload Resume (PDF only, Max 5MB)
+</label>
+<div id="resumeFeedback" class="file-feedback"></div>
 
-        // 4. Send to Google Apps Script
-        const response = await fetch(SCRIPT_URL, {
-          method: 'POST',
-          body: JSON.stringify(payload)
-        });
+<label>Other Documents (Optional)</label>
+<input type="file" id="otherFiles" multiple accept=".pdf,.jpg,.jpeg,.png" class="upload-input">
+<label for="otherFiles" class="upload-label" id="otherDrop">
+Certificates / ID Proof
+</label>
+<div id="otherFeedback" class="file-feedback"></div>
 
-        // 5. Check Response
-        const result = await response.json();
-        
-        if (result.status === 'success') {
-          alert("Application & Documents Uploaded Successfully!");
-          form.reset();
-          resumeFeedback.style.display = 'none';
-          otherFeedback.style.display = 'none';
-        } else {
-          // This will show the EXACT error from the server (e.g. "Folder ID Invalid")
-          throw new Error(result.message || "Unknown server error");
-        }
+<div class="progress-container" id="progressContainer">
+<div class="progress-bar">
+<div class="progress-fill" id="progressFill"></div>
+</div>
+</div>
 
-      } catch (err) {
-        console.error(err);
-        alert("Submission Failed: " + err.message);
-      } finally {
-        loadingOverlay.style.display = 'none';
-        submitBtn.disabled = false;
-      }
-    });
+<button type="submit" class="submit-btn" id="submitBtn">Submit Application</button>
 
-    // Helper: File to Base64
-    const toBase64 = file => new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result.split(',')[1]);
-      reader.onerror = error => reject(error);
-    });
-  </script>
+</form>
+
+<div class="footer">Powered by DocCollect</div>
+
+</div>
+
+<div class="success-screen" id="successScreen">
+<h2>Application Submitted Successfully 🎉</h2>
+<p id="successMessage"></p>
+<button onclick="location.reload()">Submit Another Application</button>
+</div>
+
+</div>
+
+<script>
+let SCRIPT_URL=null,API_KEY=null,companyKey=null;
+
+async function loadBranding(){
+const params=new URLSearchParams(window.location.search);
+companyKey=params.get("company");
+if(!companyKey)return;
+const res=await fetch("companies.json");
+const companies=await res.json();
+const config=companies[companyKey];
+document.getElementById("companyName").textContent=config.companyName;
+document.getElementById("formTitle").textContent=config.formTitle;
+if(config.logoUrl)
+document.getElementById("brandLogo").innerHTML=`<img src="${config.logoUrl}">`;
+document.documentElement.style.setProperty('--primary-color',config.primaryColor);
+SCRIPT_URL=config.scriptUrl;
+API_KEY=config.apiKey;
+}
+loadBranding();
+
+/* Fresher toggle */
+document.getElementById('experience').addEventListener('change',function(){
+const section=document.getElementById('professionalSection');
+if(this.value==="Fresher"){
+section.style.opacity='.5';
+section.style.pointerEvents='none';
+section.querySelectorAll('input,select').forEach(i=>i.value="");
+}else{
+section.style.opacity='1';
+section.style.pointerEvents='auto';
+}
+});
+
+/* Drag-drop */
+function setupDrop(input,label){
+label.addEventListener('dragover',e=>{
+e.preventDefault();
+label.classList.add('dragover');
+});
+label.addEventListener('dragleave',()=>label.classList.remove('dragover'));
+label.addEventListener('drop',e=>{
+e.preventDefault();
+label.classList.remove('dragover');
+input.files=e.dataTransfer.files;
+input.dispatchEvent(new Event('change'));
+});
+}
+setupDrop(resumeFile,resumeDrop);
+setupDrop(otherFiles,otherDrop);
+
+/* Upload Handlers */
+resumeFile.addEventListener('change',function(){
+if(this.files[0]){
+resumeFeedback.style.display='block';
+resumeFeedback.textContent="📄 "+this.files[0].name;
+}
+});
+otherFiles.addEventListener('change',function(){
+if(this.files.length>0){
+otherFeedback.style.display='block';
+otherFeedback.textContent="🗂️ "+this.files.length+" files selected";
+}
+});
+
+/* Submit */
+const form=document.getElementById('docCollectForm');
+const overlay=document.getElementById('loadingOverlay');
+const submitBtn=document.getElementById('submitBtn');
+const progressFill=document.getElementById('progressFill');
+const progressContainer=document.getElementById('progressContainer');
+
+form.addEventListener('submit',async function(e){
+e.preventDefault();
+if(!SCRIPT_URL||!API_KEY)return;
+
+overlay.style.display='flex';
+submitBtn.disabled=true;
+
+try{
+const resumeB64=await toBase64(resumeFile.files[0]);
+
+let otherDocsArray=[];
+for(let i=0;i<otherFiles.files.length;i++){
+const file=otherFiles.files[i];
+const b64=await toBase64(file);
+otherDocsArray.push({name:file.name,mimeType:file.type,data:b64});
+}
+
+overlay.style.display='none';
+progressContainer.style.display='block';
+progressFill.style.width='30%';
+
+const payload={
+apiKey:API_KEY,
+company:companyKey,
+name:form.name.value,
+phone:form.phone.value,
+email:form.email.value,
+role:form.role.value,
+experience:form.experience.value,
+location:form.location.value,
+current_ctc:form.current_ctc.value||'',
+expected_ctc:form.expected_ctc.value||'',
+notice_period:form.notice_period.value||'',
+resume:{name:resumeFile.files[0].name,mimeType:resumeFile.files[0].type,data:resumeB64},
+other_docs:otherDocsArray
+};
+
+const response=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify(payload)});
+const result=await response.json();
+
+progressFill.style.width='100%';
+
+if(result.status==='success'){
+document.getElementById("formContainer").style.display='none';
+document.getElementById("successScreen").style.display='block';
+document.getElementById("successMessage").innerText=
+`Thank you for applying to ${document.getElementById("companyName").innerText}.`;
+}else{
+throw new Error(result.message);
+}
+
+}catch(err){
+alert("Submission Failed: "+err.message);
+}finally{
+submitBtn.disabled=false;
+}
+});
+
+const toBase64=file=>new Promise((resolve,reject)=>{
+const reader=new FileReader();
+reader.readAsDataURL(file);
+reader.onload=()=>resolve(reader.result.split(',')[1]);
+reader.onerror=reject;
+});
+</script>
+
 </body>
 </html>
-
