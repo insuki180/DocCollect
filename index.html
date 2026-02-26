@@ -419,14 +419,15 @@ other_docs:otherDocsArray
 };
 
 /* 🔥 CORS SAFE FETCH */
-await fetch(SCRIPT_URL,{
-method:'POST',
-mode:'no-cors',
-headers:{
-'Content-Type':'text/plain'
-},
-body:JSON.stringify(payload)
+const response = await fetch(SCRIPT_URL, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(payload)
 });
+
+const result = await response.json();
 
 progressFill.style.width='100%';
 
@@ -453,3 +454,4 @@ reader.onerror=reject;
 
 </body>
 </html>
+
