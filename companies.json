@@ -7,12 +7,28 @@
     "scriptUrl": "https://script.google.com/macros/s/AKfycbTechcorp123/exec",
     "apiKey": "TC_2026_secureKey_8f3k2"
   },
-  "abc": {
-    "companyName": "ABC Pvt Ltd",
-    "formTitle": "We Are Hiring",
-    "logoUrl": "logos/abc.png",
-    "primaryColor": "#e11d48",
-    "scriptUrl": "https://script.google.com/macros/s/AKfycbABC456/exec",
-    "apiKey": "ABC_2026_secureKey_91js2"
+  "arena": {
+    "companyName": "The Arena Group",
+    "formTitle": "Career Application",
+    "logoUrl": "logos/Arena.png",
+    "primaryColor": "#e10600",
+    "scriptUrl": "PASTE_ARENA_SCRIPT_URL",
+    "apiKey": "ARENA_2026_key"
+  },
+  "geosis": {
+    "companyName": "Geosis Technologies",
+    "formTitle": "Employment Application",
+    "logoUrl": "logos/Geosis.png",
+    "primaryColor": "#2e7d32",
+    "scriptUrl": "PASTE_GEOSIS_SCRIPT_URL",
+    "apiKey": "GEOSIS_2026_key"
+  },
+  "taodigital": {
+    "companyName": "TAO Digital",
+    "formTitle": "Join Our Team",
+    "logoUrl": "logos/tao.png",
+    "primaryColor": "#1976d2",
+    "scriptUrl": "PASTE_TAO_SCRIPT_URL",
+    "apiKey": "TAO_2026_key"
   }
 }
