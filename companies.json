@@ -12,7 +12,7 @@
     "formTitle": "Career Application",
     "logoUrl": "logos/Arena.png",
     "primaryColor": "#e10600",
-    "scriptUrl": "PASTE_ARENA_SCRIPT_URL",
+    "scriptUrl": "https://script.google.com/macros/s/AKfycbxUotf8kFruCL1Bl4te9rX7rP3tSjhAKDIYy_yogN7NfvjykCeHKdyZqy7lN_tfRLrf/exec",
     "apiKey": "ARENA_2026_key"
   },
   "geosis": {
@@ -32,3 +32,4 @@
     "apiKey": "TAO_2026_key"
   }
 }
+
