@@ -227,8 +227,7 @@ font-weight:600;
 
 <div class="section-title">Job & Experience</div>
 
-<label>Applying For *</label>
-<input type="text" name="role" placeholder="Full Stack Developer">
+<div id="jobContainer"></div>
 
 <label>Years of Experience *</label>
 <select id="experience" name="experience" required>
@@ -315,17 +314,80 @@ async function loadBranding(){
 const params=new URLSearchParams(window.location.search);
 companyKey=params.get("company");
 if(!companyKey)return;
+
 const res=await fetch("companies.json");
 const companies=await res.json();
 const config=companies[companyKey];
+
 document.getElementById("companyName").textContent=config.companyName;
 document.getElementById("formTitle").textContent=config.formTitle;
+
 if(config.logoUrl)
 document.getElementById("brandLogo").innerHTML=`<img src="${config.logoUrl}">`;
+
 document.documentElement.style.setProperty('--primary-color',config.primaryColor);
+
 SCRIPT_URL=config.scriptUrl;
 API_KEY=config.apiKey;
+
+/* ===== JOB ENGINE START (MOVED INSIDE) ===== */
+const jobContainer = document.getElementById("jobContainer");
+
+if (config.jobConfig) {
+
+  const type = config.jobConfig.type;
+
+  if (type === "dropdown") {
+
+    jobContainer.innerHTML = "<label>Applying For *</label>";
+    const select = document.createElement("select");
+    select.name = "role";
+    select.required = true;
+
+    const defaultOption = document.createElement("option");
+    defaultOption.value = "";
+    defaultOption.textContent = "Select Position";
+    select.appendChild(defaultOption);
+
+    config.jobConfig.jobs
+      .filter(job => job.active)
+      .forEach(job => {
+        const option = document.createElement("option");
+        option.value = job.title;
+        option.textContent = job.title;
+        select.appendChild(option);
+      });
+
+    jobContainer.appendChild(select);
+  }
+
+  else if (type === "text") {
+
+    jobContainer.innerHTML = `
+      <label>Applying For *</label>
+      <input type="text" name="role" required placeholder="Enter Job Role">
+    `;
+  }
+
+  else if (type === "hidden") {
+
+    const hidden = document.createElement("input");
+    hidden.type = "hidden";
+    hidden.name = "role";
+    hidden.value = config.jobConfig.fixedValue;
+
+    jobContainer.appendChild(hidden);
+
+    jobContainer.innerHTML += `
+      <label>Applying For</label>
+      <input type="text" value="${config.jobConfig.fixedValue}" disabled>
+    `;
+  }
 }
+/* ===== JOB ENGINE END ===== */
+
+}
+
 loadBranding();
 
 /* Fresher toggle */
@@ -388,7 +450,6 @@ submitBtn.disabled=true;
 
 try{
 
-/* Convert files */
 const resumeB64=await toBase64(resumeFile.files[0]);
 
 let otherDocsArray=[];
@@ -418,7 +479,6 @@ resume:{name:resumeFile.files[0].name,mimeType:resumeFile.files[0].type,data:res
 other_docs:otherDocsArray
 };
 
-/* 🔥 CORS SAFE FETCH */
 const response = await fetch(SCRIPT_URL, {
   method: 'POST',
   headers: {
@@ -432,12 +492,10 @@ const result = await response.json();
 progressFill.style.width='100%';
 
 if (result.status === 'success') {
-
   document.getElementById("formContainer").style.display='none';
   document.getElementById("successScreen").style.display='block';
   document.getElementById("successMessage").innerText =
     `Thank you for applying to ${document.getElementById("companyName").innerText}.`;
-
 } else {
   throw new Error(result.message || "Submission failed");
 }
@@ -459,6 +517,7 @@ reader.onerror=reject;
 
 </body>
 </html>
+
 
 
 
