@@ -59,5 +59,21 @@
       "type": "text"
     }
     }
-  }
+  },
+
+  "EassyonboardLLP": {
+    "companyName": "Eassyonboard LLP",
+    "formTitle": "Career Application",
+    "logoUrl": "logos/Arena.png",
+    "primaryColor": "#e10600",
+    "scriptUrl": "PASTE_Eassyonboard_SCRIPT_URL",
+    "apiKey": "Eassyonboard_2026_secureKey_91js2",
+
+    "jobConfig": {
+      "type": "hidden",
+      "fixedValue": "WordPress Developer"
+    }
+  },
+
 }
+
