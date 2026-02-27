@@ -5,33 +5,59 @@
     "logoUrl": "logos/techcorp.png",
     "primaryColor": "#2563eb",
     "scriptUrl": "https://script.google.com/macros/s/AKfycbzcTQruDPGztINkCCnAOxd2q5R8P0XpOgf9sfGkcrpjOlBTAsRn4GpaHKAf3qg1spFcnw/exec",
-    "apiKey": "TC_2026_secureKey_8f3k2"
+    "apiKey": "TC_2026_secureKey_8f3k2",
+
+    "jobConfig": {
+      "type": "dropdown",
+      "jobs": [
+        { "title": "Full Stack Developer", "active": true },
+        { "title": "Backend Developer", "active": true },
+        { "title": "DevOps Engineer", "active": false }
+      ]
+    }
   },
+
   "arena": {
     "companyName": "The Arena Group",
     "formTitle": "Career Application",
     "logoUrl": "logos/Arena.png",
     "primaryColor": "#e10600",
     "scriptUrl": "https://script.google.com/macros/s/AKfycbx-Wqqvn6yCiHa0xB7T1ZDXF9rmoHzUC0s5QdjD9P8d6wF6-0ZmT9hE_5_a9bzZrIPW/exec",
-    "apiKey": "Arena_2026_secureKey_91js2"
+    "apiKey": "Arena_2026_secureKey_91js2",
+
+    "jobConfig": {
+      "type": "hidden",
+      "fixedValue": "WordPress Developer"
+    }
   },
+
   "geosis": {
     "companyName": "Geosis Technologies",
     "formTitle": "Employment Application",
     "logoUrl": "logos/Geosis.png",
     "primaryColor": "#2e7d32",
     "scriptUrl": "PASTE_GEOSIS_SCRIPT_URL",
-    "apiKey": "GEOSIS_2026_key"
+    "apiKey": "GEOSIS_2026_key",
+
+    "jobConfig": {
+      "type": "hidden",
+      "fixedValue": "GIS Analyst"
+    }
   },
+
   "taodigital": {
     "companyName": "TAO Digital",
     "formTitle": "Join Our Team",
     "logoUrl": "logos/tao.png",
     "primaryColor": "#1976d2",
     "scriptUrl": "PASTE_TAO_SCRIPT_URL",
-    "apiKey": "TAO_2026_key"
+    "apiKey": "TAO_2026_key",
+
+    "jobConfig": {
+      "type": "dropdown",
+      "jobs": {
+      "type": "text"
+    }
+    }
   }
 }
-
-
-
