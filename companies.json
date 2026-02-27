@@ -21,7 +21,7 @@
     "companyName": "The Arena Group",
     "formTitle": "Career Application",
     "logoUrl": "logos/Arena.png",
-    "primaryColor": "#e10600",
+    "primaryColor": "#2563eb",
     "scriptUrl": "https://script.google.com/macros/s/AKfycbx-Wqqvn6yCiHa0xB7T1ZDXF9rmoHzUC0s5QdjD9P8d6wF6-0ZmT9hE_5_a9bzZrIPW/exec",
     "apiKey": "Arena_2026_secureKey_91js2",
 
@@ -63,9 +63,9 @@
 
   "EassyonboardLLP": {
     "companyName": "Eassyonboard LLP",
-    "formTitle": "Career Application",
+    "formTitle": "Candidate Application Form",
     "logoUrl": "logos/Arena.png",
-    "primaryColor": "#e10600",
+    "primaryColor" "#1d4ed8",
     "scriptUrl": "PASTE_Eassyonboard_SCRIPT_URL",
     "apiKey": "Eassyonboard_2026_secureKey_91js2",
 
@@ -76,4 +76,5 @@
   },
 
 }
+
 
