@@ -33,7 +33,6 @@ border-radius:16px;
 box-shadow:0 8px 25px rgba(0,0,0,.06);
 }
 
-/* Spinner Overlay */
 #loadingOverlay{
 display:none;
 position:fixed;
@@ -54,6 +53,7 @@ height:45px;
 animation:spin 1s linear infinite;
 margin-bottom:15px;
 }
+
 @keyframes spin{
 0%{transform:rotate(0deg);}
 100%{transform:rotate(360deg);}
@@ -92,12 +92,6 @@ font-size:15px;
 box-sizing:border-box;
 }
 
-input:focus,select:focus{
-outline:none;
-border-color:var(--primary-color);
-box-shadow:0 0 0 3px rgba(37,99,235,.1);
-}
-
 .flex-row{display:flex;gap:12px;}
 .flex-row>div{flex:1;}
 
@@ -114,7 +108,6 @@ border-radius:14px;
 background:#fafafa;
 text-align:center;
 cursor:pointer;
-transition:.25s;
 }
 
 .upload-label.dragover{
@@ -165,41 +158,21 @@ font-weight:700;
 cursor:pointer;
 }
 
-.submit-btn:disabled{
-background:#9ca3af;
-cursor:not-allowed;
-}
-
 .success-screen{
 display:none;
 text-align:center;
 padding:40px 20px;
 }
 
-.success-screen h2{
-color:var(--success-color);
-margin-bottom:10px;
-}
-
-.success-screen button{
-margin-top:20px;
-padding:12px 20px;
-border:none;
-background:var(--primary-color);
-color:#fff;
-border-radius:10px;
-font-weight:600;
-}
-
 .footer{text-align:center;margin-top:18px;font-size:12px;color:#9ca3af;}
 </style>
 </head>
+
 <body>
 
 <div id="loadingOverlay">
 <div class="spinner"></div>
 <h3>Processing Files...</h3>
-<p style="color:#666;font-size:14px;">Preparing documents securely.</p>
 </div>
 
 <div class="container">
@@ -208,7 +181,7 @@ font-weight:600;
 
 <div class="header">
 <div id="brandLogo"></div>
-<h1 id="companyName"></h1>
+<h1 id="companyName">Loading...</h1>
 <p id="formTitle"></p>
 </div>
 
@@ -217,13 +190,13 @@ font-weight:600;
 <div class="section-title">Personal Details</div>
 
 <label>Full Name *</label>
-<input type="text" name="name" required placeholder="Enter your full name">
+<input type="text" name="name" required>
 
 <label>Mobile Number *</label>
-<input type="tel" name="phone" required placeholder="98765 43210">
+<input type="tel" name="phone" required>
 
 <label>Email *</label>
-<input type="email" name="email" required placeholder="john@email.com">
+<input type="email" name="email" required>
 
 <div class="section-title">Job & Experience</div>
 
@@ -232,15 +205,15 @@ font-weight:600;
 <label>Years of Experience *</label>
 <select id="experience" name="experience" required>
 <option value="">Select</option>
-<option value="Fresher">Fresher (0 Years)</option>
-<option value="0-1">0 - 1 Years</option>
-<option value="1-3">1 - 3 Years</option>
-<option value="3-5">3 - 5 Years</option>
+<option value="Fresher">Fresher</option>
+<option value="0-1">0-1 Years</option>
+<option value="1-3">1-3 Years</option>
+<option value="3-5">3-5 Years</option>
 <option value="5+">5+ Years</option>
 </select>
 
 <label>Current Location *</label>
-<input type="text" name="location" required placeholder="Current City">
+<input type="text" name="location" required>
 
 <div id="professionalSection">
 
@@ -248,18 +221,18 @@ font-weight:600;
 
 <div class="flex-row">
 <div>
-<label>Current CTC (LPA)</label>
-<input type="text" name="current_ctc" placeholder="4.5">
+<label>Current CTC</label>
+<input type="text" name="current_ctc">
 </div>
 <div>
 <label>Expected CTC</label>
-<input type="text" name="expected_ctc" placeholder="6.0">
+<input type="text" name="expected_ctc">
 </div>
 </div>
 
 <label>Notice Period</label>
 <select name="notice_period">
-<option value="">Select Notice Period</option>
+<option value="">Select</option>
 <option>Immediate</option>
 <option>15 Days</option>
 <option>30 Days</option>
@@ -271,25 +244,8 @@ font-weight:600;
 
 <div class="section-title">Documents</div>
 
-<label>Resume (PDF Only) *</label>
-<input type="file" id="resumeFile" accept="application/pdf" class="upload-input" required>
-<label for="resumeFile" class="upload-label" id="resumeDrop">
-Upload Resume (PDF only, Max 5MB)
-</label>
-<div id="resumeFeedback" class="file-feedback"></div>
-
-<label>Other Documents (Optional)</label>
-<input type="file" id="otherFiles" multiple accept=".pdf,.jpg,.jpeg,.png" class="upload-input">
-<label for="otherFiles" class="upload-label" id="otherDrop">
-Certificates / ID Proof
-</label>
-<div id="otherFeedback" class="file-feedback"></div>
-
-<div class="progress-container" id="progressContainer">
-<div class="progress-bar">
-<div class="progress-fill" id="progressFill"></div>
-</div>
-</div>
+<label>Resume *</label>
+<input type="file" id="resumeFile" accept="application/pdf" required>
 
 <button type="submit" class="submit-btn" id="submitBtn">Submit Application</button>
 
@@ -299,225 +255,110 @@ Certificates / ID Proof
 
 </div>
 
-<div class="success-screen" id="successScreen">
-<h2>Application Submitted Successfully 🎉</h2>
-<p id="successMessage"></p>
-<button onclick="location.reload()">Submit Another Application</button>
-</div>
-
 </div>
 
 <script>
+
 let SCRIPT_URL=null,API_KEY=null,companyKey=null;
 
 async function loadBranding(){
+
 const params=new URLSearchParams(window.location.search);
-companyKey=params.get("company");
-if(!companyKey)return;
+companyKey=params.get("company") || "techcorp";
 
 const res=await fetch("companies.json");
+
+if(!res.ok){
+console.error("companies.json not found");
+return;
+}
+
 const companies=await res.json();
 const config=companies[companyKey];
+
+if(!config){
+console.error("Company config missing");
+return;
+}
 
 document.getElementById("companyName").textContent=config.companyName;
 document.getElementById("formTitle").textContent=config.formTitle;
 
-if(config.logoUrl)
+if(config.logoUrl){
 document.getElementById("brandLogo").innerHTML=`<img src="${config.logoUrl}">`;
+}
 
 document.documentElement.style.setProperty('--primary-color',config.primaryColor);
 
 SCRIPT_URL=config.scriptUrl;
 API_KEY=config.apiKey;
 
-/* ===== JOB ENGINE START (MOVED INSIDE) ===== */
-const jobContainer = document.getElementById("jobContainer");
+const jobContainer=document.getElementById("jobContainer");
 
-if (config.jobConfig) {
+if(config.jobConfig){
 
-  const type = config.jobConfig.type;
+const type=config.jobConfig.type;
 
-  if (type === "dropdown") {
+if(type==="dropdown"){
 
-    jobContainer.innerHTML = "<label>Applying For *</label>";
-    const select = document.createElement("select");
-    select.name = "role";
-    select.required = true;
+jobContainer.innerHTML="<label>Applying For *</label>";
 
-    const defaultOption = document.createElement("option");
-    defaultOption.value = "";
-    defaultOption.textContent = "Select Position";
-    select.appendChild(defaultOption);
+const select=document.createElement("select");
+select.name="role";
+select.required=true;
 
-    config.jobConfig.jobs
-      .filter(job => job.active)
-      .forEach(job => {
-        const option = document.createElement("option");
-        option.value = job.title;
-        option.textContent = job.title;
-        select.appendChild(option);
-      });
+const def=document.createElement("option");
+def.value="";
+def.textContent="Select Position";
+select.appendChild(def);
 
-    jobContainer.appendChild(select);
-  }
+config.jobConfig.jobs.filter(j=>j.active).forEach(job=>{
+const opt=document.createElement("option");
+opt.value=job.title;
+opt.textContent=job.title;
+select.appendChild(opt);
+});
 
-  else if (type === "text") {
-
-    jobContainer.innerHTML = `
-      <label>Applying For *</label>
-      <input type="text" name="role" required placeholder="Enter Job Role">
-    `;
-  }
-
-  else if (type === "hidden") {
-
-    const hidden = document.createElement("input");
-    hidden.type = "hidden";
-    hidden.name = "role";
-    hidden.value = config.jobConfig.fixedValue;
-
-    jobContainer.appendChild(hidden);
-
-    jobContainer.innerHTML += `
-      <label>Applying For</label>
-      <input type="text" value="${config.jobConfig.fixedValue}" disabled>
-    `;
-  }
+jobContainer.appendChild(select);
 }
-/* ===== JOB ENGINE END ===== */
+
+else if(type==="text"){
+
+jobContainer.innerHTML=`
+<label>Applying For *</label>
+<input type="text" name="role" required>
+`;
+
+}
+
+else if(type==="hidden"){
+
+const hidden=document.createElement("input");
+hidden.type="hidden";
+hidden.name="role";
+hidden.value=config.jobConfig.fixedValue;
+
+jobContainer.appendChild(hidden);
+
+const label=document.createElement("label");
+label.textContent="Applying For";
+
+const display=document.createElement("input");
+display.type="text";
+display.value=config.jobConfig.fixedValue;
+display.disabled=true;
+
+jobContainer.appendChild(label);
+jobContainer.appendChild(display);
+}
+
+}
 
 }
 
 loadBranding();
 
-/* Fresher toggle */
-document.getElementById('experience').addEventListener('change',function(){
-const section=document.getElementById('professionalSection');
-if(this.value==="Fresher"){
-section.style.opacity='.5';
-section.style.pointerEvents='none';
-section.querySelectorAll('input,select').forEach(i=>i.value="");
-}else{
-section.style.opacity='1';
-section.style.pointerEvents='auto';
-}
-});
-
-/* Drag-drop */
-function setupDrop(input,label){
-label.addEventListener('dragover',e=>{
-e.preventDefault();
-label.classList.add('dragover');
-});
-label.addEventListener('dragleave',()=>label.classList.remove('dragover'));
-label.addEventListener('drop',e=>{
-e.preventDefault();
-label.classList.remove('dragover');
-input.files=e.dataTransfer.files;
-input.dispatchEvent(new Event('change'));
-});
-}
-setupDrop(resumeFile,resumeDrop);
-setupDrop(otherFiles,otherDrop);
-
-/* Upload Handlers */
-resumeFile.addEventListener('change',function(){
-if(this.files[0]){
-resumeFeedback.style.display='block';
-resumeFeedback.textContent="📄 "+this.files[0].name;
-}
-});
-otherFiles.addEventListener('change',function(){
-if(this.files.length>0){
-otherFeedback.style.display='block';
-otherFeedback.textContent="🗂️ "+this.files.length+" files selected";
-}
-});
-
-/* Submit */
-const form=document.getElementById('docCollectForm');
-const overlay=document.getElementById('loadingOverlay');
-const submitBtn=document.getElementById('submitBtn');
-const progressFill=document.getElementById('progressFill');
-const progressContainer=document.getElementById('progressContainer');
-
-form.addEventListener('submit',async function(e){
-e.preventDefault();
-if(!SCRIPT_URL||!API_KEY)return;
-
-overlay.style.display='flex';
-submitBtn.disabled=true;
-
-try{
-
-const resumeB64=await toBase64(resumeFile.files[0]);
-
-let otherDocsArray=[];
-for(let i=0;i<otherFiles.files.length;i++){
-const file=otherFiles.files[i];
-const b64=await toBase64(file);
-otherDocsArray.push({name:file.name,mimeType:file.type,data:b64});
-}
-
-overlay.style.display='none';
-progressContainer.style.display='block';
-progressFill.style.width='40%';
-
-const payload={
-apiKey:API_KEY,
-company:companyKey,
-name:form.name.value,
-phone:form.phone.value,
-email:form.email.value,
-role:form.role.value,
-experience:form.experience.value,
-location:form.location.value,
-current_ctc:form.current_ctc.value||'',
-expected_ctc:form.expected_ctc.value||'',
-notice_period:form.notice_period.value||'',
-resume:{name:resumeFile.files[0].name,mimeType:resumeFile.files[0].type,data:resumeB64},
-other_docs:otherDocsArray
-};
-
-const response = await fetch(SCRIPT_URL, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'text/plain'
-  },
-  body: JSON.stringify(payload)
-});
-
-const result = await response.json();
-
-progressFill.style.width='100%';
-
-if (result.status === 'success') {
-  document.getElementById("formContainer").style.display='none';
-  document.getElementById("successScreen").style.display='block';
-  document.getElementById("successMessage").innerText =
-    `Thank you for applying to ${document.getElementById("companyName").innerText}.`;
-} else {
-  throw new Error(result.message || "Submission failed");
-}
-
-}catch(err){
-alert("Submission Failed: "+err.message);
-}finally{
-submitBtn.disabled=false;
-}
-});
-
-const toBase64=file=>new Promise((resolve,reject)=>{
-const reader=new FileReader();
-reader.readAsDataURL(file);
-reader.onload=()=>resolve(reader.result.split(',')[1]);
-reader.onerror=reject;
-});
 </script>
 
 </body>
 </html>
-
-
-
-
