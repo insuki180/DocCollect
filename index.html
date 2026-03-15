@@ -157,12 +157,38 @@ input:disabled {
   border-style: solid;
 }
 
+/* Dynamic File List Display */
+.file-list {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.file-item {
+  background: #f3f4f6;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  animation: fadeIn 0.3s ease-out;
+  border: 1px solid var(--border);
+}
+
+.file-item.success {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #065f46;
+}
+
 /* Smooth Transition for Fresher Toggle */
 #professionalSection {
   transition: opacity 0.3s ease;
 }
 
-/* Submit Button */
+/* Submit Button & Loading State */
 .submit-btn {
   margin-top: 35px;
   width: 100%;
@@ -174,23 +200,73 @@ input:disabled {
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s, transform 0.1s;
+  transition: all 0.2s;
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.submit-btn:hover {
+.submit-btn:hover:not(:disabled) {
   background: var(--primary-hover);
 }
 
-.submit-btn:active {
+.submit-btn:active:not(:disabled) {
   transform: scale(0.98);
 }
 
+/* Grays out when disabled */
 .submit-btn:disabled {
-  background: var(--muted);
+  background: #9ca3af !important;
   cursor: not-allowed;
   box-shadow: none;
   transform: none;
+}
+
+/* Spinner Animation */
+.spinner {
+  border: 3px solid rgba(255,255,255,0.3);
+  border-top: 3px solid #ffffff;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+  display: none; /* Hidden by default */
+  margin-right: 10px;
+}
+
+.submit-btn.loading .spinner {
+  display: block; /* Shows spinner when loading class is active */
+}
+
+@keyframes spin { 
+  0% { transform: rotate(0deg); } 
+  100% { transform: rotate(360deg); } 
+}
+
+/* Success Screen */
+#successState {
+  display: none;
+  text-align: center;
+  padding: 40px 20px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+#successState h2 {
+  color: var(--success-color);
+  margin-bottom: 12px;
+  font-size: 26px;
+}
+
+#successState p {
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.success-icon {
+  font-size: 55px;
+  margin-bottom: 20px;
 }
 
 .footer {
@@ -291,18 +367,25 @@ input:disabled {
 <label>Resume *</label>
 <input type="file" id="resumeFile" class="upload-input" accept="application/pdf" required>
 <label for="resumeFile" id="resumeLabel" class="upload-label">
-  <span id="resumeText">Click to Upload Resume (PDF)</span>
+  <span id="resumeText">Click to Select Resume (PDF)</span>
 </label>
-
-<label>Other Documents</label>
+<div id="resumeFileList" class="file-list"></div> <label>Other Documents</label>
 <input type="file" id="otherFiles" class="upload-input" multiple>
 <label for="otherFiles" id="otherDocsLabel" class="upload-label">
-  <span id="otherDocsText">Click to Upload Certificates / ID Proof</span>
+  <span id="otherDocsText">Click to Select Certificates / ID Proof</span>
 </label>
-
-<button type="submit" id="submitBtn" class="submit-btn">Submit Application</button>
+<div id="otherFileList" class="file-list"></div> <button type="submit" id="submitBtn" class="submit-btn">
+  <div class="spinner"></div>
+  <span id="submitBtnText">Submit Application</span>
+</button>
 
 </form>
+
+<div id="successState">
+  <div class="success-icon">✅</div>
+  <h2>Application Submitted!</h2>
+  <p>Thank you for applying. We have securely received your details and documents. Our HR team will review your profile shortly.</p>
+</div>
 
 <div class="footer">Powered by DocCollect</div>
 
@@ -347,10 +430,8 @@ async function loadBranding(){
     }
 
     document.documentElement.style.setProperty('--primary-color', config.primaryColor);
-    
-    // Auto-generate a darker hover color based on primary color (simplified via CSS variables usually, but keeping it simple here)
     document.documentElement.style.setProperty('--primary-hover', config.primaryColor); 
-    document.documentElement.style.setProperty('--ring', config.primaryColor + '33'); // Adds 20% opacity hex for ring
+    document.documentElement.style.setProperty('--ring', config.primaryColor + '33'); 
 
     SCRIPT_URL=config.scriptUrl;
     API_KEY=config.apiKey;
@@ -438,32 +519,47 @@ document.getElementById("experience").addEventListener("change",toggleFresher);
 toggleFresher();
 
 /* ============================= */
-/* UI: File Upload Feedback */
+/* Real-Time File Attachment UI */
 /* ============================= */
 
-document.getElementById("resumeFile").addEventListener("change", function(e) {
-  const labelText = document.getElementById("resumeText");
-  const labelBox = document.getElementById("resumeLabel");
-  if (this.files && this.files.length > 0) {
-    labelText.textContent = "📄 " + this.files[0].name;
-    labelBox.classList.add("has-file");
-  } else {
-    labelText.textContent = "Click to Upload Resume (PDF)";
+function simulateFileAttachment(files, listElementId, labelBoxId, labelTextId, emptyText) {
+  const listElement = document.getElementById(listElementId);
+  const labelBox = document.getElementById(labelBoxId);
+  const labelText = document.getElementById(labelTextId);
+  
+  listElement.innerHTML = '';
+  
+  if (!files || files.length === 0) {
+    labelText.textContent = emptyText;
     labelBox.classList.remove("has-file");
+    return;
   }
+  
+  labelText.textContent = "Click to Change File(s)";
+  labelBox.classList.add("has-file");
+  
+  Array.from(files).forEach(file => {
+    const item = document.createElement('div');
+    item.className = 'file-item';
+    
+    // Shows "Processing..." instantly
+    item.innerHTML = `<span>⏳ Processing file...</span> <span style="opacity:0.7;">${file.name}</span>`;
+    listElement.appendChild(item);
+    
+    // Simulates a quick successful attachment after half a second
+    setTimeout(() => {
+      item.classList.add('success');
+      item.innerHTML = `<span>✅ Attached</span> <span style="font-weight:600;">${file.name}</span>`;
+    }, 600); 
+  });
+}
+
+document.getElementById("resumeFile").addEventListener("change", function() {
+  simulateFileAttachment(this.files, "resumeFileList", "resumeLabel", "resumeText", "Click to Select Resume (PDF)");
 });
 
-document.getElementById("otherFiles").addEventListener("change", function(e) {
-  const labelText = document.getElementById("otherDocsText");
-  const labelBox = document.getElementById("otherDocsLabel");
-  if (this.files && this.files.length > 0) {
-    const fileCount = this.files.length;
-    labelText.textContent = fileCount === 1 ? "📁 " + this.files[0].name : "📁 " + fileCount + " files selected";
-    labelBox.classList.add("has-file");
-  } else {
-    labelText.textContent = "Click to Upload Certificates / ID Proof";
-    labelBox.classList.remove("has-file");
-  }
+document.getElementById("otherFiles").addEventListener("change", function() {
+  simulateFileAttachment(this.files, "otherFileList", "otherDocsLabel", "otherDocsText", "Click to Select Certificates / ID Proof");
 });
 
 /* ============================= */
@@ -475,12 +571,14 @@ document.getElementById("docCollectForm").addEventListener("submit",async functi
 
   if(!SCRIPT_URL) return alert("Configuration not loaded. Please check your URL.");
 
-  const form=document.getElementById("docCollectForm");
+  const form = document.getElementById("docCollectForm");
   const submitBtn = document.getElementById("submitBtn");
+  const submitBtnText = document.getElementById("submitBtnText");
 
-  // Loading state
+  // Disable button, gray it out, and show spinner
   submitBtn.disabled = true;
-  submitBtn.textContent = "Uploading... Please wait";
+  submitBtn.classList.add("loading");
+  submitBtnText.textContent = "Uploading & Submitting...";
 
   try {
     const resumeFile=document.getElementById("resumeFile").files[0];
@@ -525,25 +623,23 @@ document.getElementById("docCollectForm").addEventListener("submit",async functi
       body:JSON.stringify(payload)
     });
 
-    alert("Application submitted successfully!");
+    // SUCCESS UI: Hide Form, Show Congratulations State
+    document.getElementById("docCollectForm").style.display = "none";
+    document.getElementById("successState").style.display = "block";
     
-    // Reset Form UI
-    form.reset();
-    toggleFresher();
-    document.getElementById("resumeText").textContent = "Click to Upload Resume (PDF)";
-    document.getElementById("resumeLabel").classList.remove("has-file");
-    document.getElementById("otherDocsText").textContent = "Click to Upload Certificates / ID Proof";
-    document.getElementById("otherDocsLabel").classList.remove("has-file");
+    // (Optional) Scroll to top so they see the success message
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
   }
   catch(err){
     alert("Upload failed. Please try again.");
     console.error(err);
-  } finally {
-    // Revert Loading state
+    
+    // Revert Loading state so they can try again
     submitBtn.disabled = false;
-    submitBtn.textContent = "Submit Application";
-  }
+    submitBtn.classList.remove("loading");
+    submitBtnText.textContent = "Submit Application";
+  } 
 });
 
 /* ============================= */
