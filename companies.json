@@ -1,72 +1,72 @@
 {
-"techcorp": {
-"companyName": "TechCorp Solutions",
-"formTitle": "Candidate Application Form",
-"logoUrl": "logos/techcorp.png",
-"primaryColor": "#2563eb",
-"scriptUrl": "https://script.google.com/macros/s/AKfycbzcTQruDPGztINkCCnAOxd2q5R8P0XpOgf9sfGkcrpjOlBTAsRn4GpaHKAf3qg1spFcnw/exec",
-"apiKey": "TC_2026_secureKey_8f3k2",
-"jobConfig": {
-"type": "dropdown",
-"jobs": [
-{ "title": "Full Stack Developer", "active": true },
-{ "title": "Backend Developer", "active": true },
-{ "title": "DevOps Engineer", "active": false }
-]
-}
-},
+  "techcorp": {
+    "companyName": "TechCorp Solutions",
+    "formTitle": "Candidate Application Form",
+    "logoUrl": "logos/techcorp.png",
+    "primaryColor": "#2563eb",
+    "scriptUrl": "https://script.google.com/macros/s/AKfycbzcTQruDPGztINkCCnAOxd2q5R8P0XpOgf9sfGkcrpjOlBTAsRn4GpaHKAf3qg1spFcnw/exec",
+    "apiKey": "TC_2026_secureKey_8f3k2",
+    "jobConfig": {
+      "type": "dropdown",
+      "jobs": [
+        { "title": "Full Stack Developer", "active": true },
+        { "title": "Backend Developer", "active": true },
+        { "title": "DevOps Engineer", "active": false }
+      ]
+    }
+  },
 
-"arena": {
-"companyName": "The Arena Group",
-"formTitle": "Career Application",
-"logoUrl": "logos/Arena.png",
-"primaryColor": "#2563eb",
-"scriptUrl": "https://script.google.com/macros/s/AKfycbx-Wqqvn6yCiHa0xB7T1ZDXF9rmoHzUC0s5QdjD9P8d6wF6-0ZmT9hE_5_a9bzZrIPW/exec",
-"apiKey": "Arena_2026_secureKey_91js2",
-"jobConfig": {
-"type": "hidden",
-"fixedValue": "WordPress Developer"
-}
-},
+  "arena": {
+    "companyName": "The Arena Group",
+    "formTitle": "Career Application",
+    "logoUrl": "logos/Arena.png",
+    "primaryColor": "#2563eb",
+    "scriptUrl": "https://script.google.com/macros/s/AKfycbx-Wqqvn6yCiHa0xB7T1ZDXF9rmoHzUC0s5QdjD9P8d6wF6-0ZmT9hE_5_a9bzZrIPW/exec",
+    "apiKey": "Arena_2026_secureKey_91js2",
+    "jobConfig": {
+      "type": "hidden",
+      "fixedValue": "WordPress Developer"
+    }
+  },
 
-"geosis": {
-"companyName": "Geosis Technologies",
-"formTitle": "Employment Application",
-"logoUrl": "logos/Geosis.png",
-"primaryColor": "#2e7d32",
-"scriptUrl": "PASTE_GEOSIS_SCRIPT_URL",
-"apiKey": "GEOSIS_2026_key",
-"jobConfig": {
-"type": "hidden",
-"fixedValue": "GIS Analyst"
-}
-},
+  "geosis": {
+    "companyName": "Geosis Technologies",
+    "formTitle": "Employment Application",
+    "logoUrl": "logos/Geosis.png",
+    "primaryColor": "#2e7d32",
+    "scriptUrl": "PASTE_GEOSIS_SCRIPT_URL",
+    "apiKey": "GEOSIS_2026_key",
+    "jobConfig": {
+      "type": "hidden",
+      "fixedValue": "GIS Analyst"
+    }
+  },
 
-"taodigital": {
-"companyName": "TAO Digital",
-"formTitle": "Join Our Team",
-"logoUrl": "logos/tao.png",
-"primaryColor": "#1976d2",
-"scriptUrl": "PASTE_TAO_SCRIPT_URL",
-"apiKey": "TAO_2026_key",
-"jobConfig": {
-"type": "text"
-}
-},
+  "taodigital": {
+    "companyName": "TAO Digital",
+    "formTitle": "Join Our Team",
+    "logoUrl": "logos/tao.png",
+    "primaryColor": "#1976d2",
+    "scriptUrl": "PASTE_TAO_SCRIPT_URL",
+    "apiKey": "TAO_2026_key",
+    "jobConfig": {
+      "type": "text"
+    }
+  },
 
-"EassyonboardLLP": {
-"companyName": "Eassyonboard LLP",
-"formTitle": "Candidate Application Form",
-"logoUrl": "https://raw.githubusercontent.com/insuki180/DocCollect/main/logos/EassyonboardLLP.png",
-"primaryColor": "#1d4ed8",
-"scriptUrl": "https://script.google.com/macros/s/AKfycby-OLKrBAKP6TM9XujE6PL2Cpkve2eXJS0BFbLTqrDN8oSbVX7I_2yXOLWbHCToMNGv5A/exec",
-"apiKey": "Eassyonboard_2026_secureKey_91js2",
-"jobConfig": {
-"type": "dropdown",
-"jobs": [
-{ "title": "Senior Financial Analyst (FP&A)", "active": true },
-{ "title": "SOX Compliance Consultant", "active": true }
-]
-}
-}
+  "EassyonboardLLP": {
+    "companyName": "Eassyonboard LLP",
+    "formTitle": "Candidate Application Form",
+    "logoUrl": "https://raw.githubusercontent.com/insuki180/DocCollect/main/logos/EassyonboardLLP.png",
+    "primaryColor": "#1d4ed8",
+    "scriptUrl": "https://script.google.com/macros/s/AKfycby-OLKrBAKP6TM9XujE6PL2Cpkve2eXJS0BFbLTqrDN8oSbVX7I_2yXOLWbHCToMNGv5A/exec",
+    "apiKey": "Eassyonboard_2026_secureKey_91js2",
+    "jobConfig": {
+      "type": "dropdown",
+      "jobs": [
+        { "title": "Senior Financial Analyst (FP&A)", "active": true },
+        { "title": "SOX Compliance Consultant", "active": true }
+      ]
+    }
+  }
 }
