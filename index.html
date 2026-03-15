@@ -308,6 +308,73 @@ section.style.pointerEvents="auto";
 document.getElementById("experience").addEventListener("change",toggleFresher);
 toggleFresher();
 
+  // ----------- FORM SUBMIT HANDLER -----------
+
+document.getElementById("docCollectForm").addEventListener("submit", async function(e){
+
+e.preventDefault();
+
+if(!SCRIPT_URL){
+alert("Configuration not loaded");
+return;
+}
+
+const btn=document.querySelector(".submit-btn");
+btn.disabled=true;
+btn.innerText="Submitting...";
+
+try{
+
+const form=document.getElementById("docCollectForm");
+const formData=new FormData(form);
+
+// attach company + security
+formData.append("company",companyKey);
+formData.append("apiKey",API_KEY);
+
+
+// -------- RESUME FILE --------
+const resume=document.getElementById("resumeFile").files[0];
+
+if(resume){
+formData.append("resume",resume);
+}
+
+
+// -------- OTHER DOCUMENTS --------
+const otherFiles=document.getElementById("otherFiles").files;
+
+for(let i=0;i<otherFiles.length;i++){
+formData.append("documents",otherFiles[i]);
+}
+
+
+// -------- SEND TO APPS SCRIPT --------
+const response=await fetch(SCRIPT_URL,{
+method:"POST",
+body:formData
+});
+
+
+const result=await response.text();
+
+alert("Application submitted successfully");
+
+form.reset();
+
+}
+catch(err){
+
+console.error(err);
+alert("Upload failed. Please try again.");
+
+}
+
+btn.disabled=false;
+btn.innerText="Submit Application";
+
+});
+
 </script>
 
 </body>
