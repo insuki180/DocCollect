@@ -358,6 +358,30 @@ jobContainer.appendChild(display);
 
 loadBranding();
 
+/* Fresher toggle for CTC section */
+
+document.getElementById("experience").addEventListener("change",function(){
+
+const section=document.getElementById("professionalSection");
+
+if(this.value==="Fresher"){
+
+section.style.opacity=".5";
+section.style.pointerEvents="none";
+
+section.querySelectorAll("input,select").forEach(el=>{
+el.value="";
+});
+
+}else{
+
+section.style.opacity="1";
+section.style.pointerEvents="auto";
+
+}
+
+});
+
 </script>
 
 </body>
