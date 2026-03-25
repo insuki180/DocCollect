@@ -580,6 +580,16 @@ document.getElementById("docCollectForm").addEventListener("submit",async functi
   submitBtn.classList.add("loading");
   submitBtnText.textContent = "Uploading & Submitting...";
 
+  // Validation and Phone Sanitization
+  const cleanedPhone = cleanPhone(form.phone.value);
+  if (cleanedPhone.length < 10) {
+    alert("Enter valid 10 digit mobile number");
+    submitBtn.disabled = false;
+    submitBtn.classList.remove("loading");
+    submitBtnText.textContent = "Submit Application";
+    return;
+  }
+
   try {
     const resumeFile=document.getElementById("resumeFile").files[0];
     const resumeB64=await toBase64(resumeFile);
@@ -601,7 +611,7 @@ document.getElementById("docCollectForm").addEventListener("submit",async functi
       apiKey:API_KEY,
       company:companyKey,
       name:form.name.value,
-      phone:form.phone.value,
+      phone:cleanedPhone,
       email:form.email.value,
       role:form.role.value,
       experience:form.experience.value,
@@ -654,6 +664,28 @@ function toBase64(file){
     reader.onerror=reject;
   });
 }
+
+function cleanPhone(value){
+  if(!value) return '';
+  let phone = value.replace(/\D/g,'');
+  if(phone.startsWith('91') && phone.length > 10){
+    phone = phone.slice(-10);
+  }
+  if(phone.length > 10){
+    phone = phone.slice(-10);
+  }
+  return phone;
+}
+
+document.querySelector('input[name="phone"]').addEventListener('input', function(){
+  let value = this.value;
+  if(value.startsWith('+')){
+    value = '+' + value.slice(1).replace(/\D/g,'');
+  } else {
+    value = value.replace(/\D/g,'');
+  }
+  this.value = value;
+});
 
 </script>
 </body>
