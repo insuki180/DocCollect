@@ -662,7 +662,9 @@ document.getElementById("docCollectForm").addEventListener("submit",async functi
       other_docs:otherDocs
     };
 
-    const res = await fetch(SCRIPT_URL,{
+    console.log("SCRIPT_URL:", SCRIPT_URL);
+
+const res = await fetch(SCRIPT_URL,{
   method:"POST",
   headers:{'Content-Type':'text/plain'},
   body:JSON.stringify(payload)
