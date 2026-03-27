@@ -662,11 +662,17 @@ document.getElementById("docCollectForm").addEventListener("submit",async functi
       other_docs:otherDocs
     };
 
-    await fetch(SCRIPT_URL,{
-      method:"POST",
-      headers:{'Content-Type':'text/plain'},
-      body:JSON.stringify(payload)
-    });
+    const res = await fetch(SCRIPT_URL,{
+  method:"POST",
+  headers:{'Content-Type':'text/plain'},
+  body:JSON.stringify(payload)
+});
+
+const result = await res.json();
+
+if(result.status !== "success"){
+  throw new Error(result.message);
+}
 
     document.getElementById("docCollectForm").style.display = "none";
     document.getElementById("successState").style.display = "block";
