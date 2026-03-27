@@ -322,15 +322,22 @@ input:disabled {
 <div id="jobContainer"></div>
 
 <label>Years of Experience *</label>
-<select id="experience" name="experience" required>
-<option value="">Select</option>
-<option value="Fresher">Fresher</option>
-<option value="0-1">0-1 Years</option>
-<option value="1-3">1-3 Years</option>
-<option value="3-5">3-5 Years</option>
-<option value="5+">5+ Years</option>
+
+<select id="experience" name="experience" required onchange="handleExperienceChange()">
+  <option value="">Select</option>
+  <option value="Fresher">Fresher</option>
+  <option value="0-2">0–2 Years</option>
+  <option value="Above 2">Above 2 Years</option>
 </select>
 
+<input 
+  type="number" 
+  id="experienceCustom" 
+  placeholder="Enter exact years (e.g. 3 or 4.5)" 
+  min="2.1"
+  step="0.1"
+  style="display:none; margin-top:10px;"
+>
 <label>Current Location *</label>
 <input type="text" name="location" placeholder="City, State" required>
 
@@ -498,7 +505,7 @@ function loadJobField(config){
 }
 
 /* ============================= */
-/* Fresher Toggle */
+/* Fresher + Experience Logic */
 /* ============================= */
 
 function toggleFresher(){
@@ -515,11 +522,26 @@ function toggleFresher(){
   }
 }
 
-document.getElementById("experience").addEventListener("change",toggleFresher);
-toggleFresher();
+function handleExperienceChange() {
+
+  const exp = document.getElementById("experience").value;
+  const custom = document.getElementById("experienceCustom");
+
+  if (exp === "Above 2") {
+    custom.style.display = "block";
+  } else {
+    custom.style.display = "none";
+    custom.value = "";
+  }
+
+  toggleFresher();
+}
+
+document.getElementById("experience").addEventListener("change",handleExperienceChange);
+handleExperienceChange();
 
 /* ============================= */
-/* Real-Time File Attachment UI */
+/* File UI */
 /* ============================= */
 
 function simulateFileAttachment(files, listElementId, labelBoxId, labelTextId, emptyText) {
@@ -542,11 +564,9 @@ function simulateFileAttachment(files, listElementId, labelBoxId, labelTextId, e
     const item = document.createElement('div');
     item.className = 'file-item';
     
-    // Shows "Processing..." instantly
     item.innerHTML = `<span>⏳ Processing file...</span> <span style="opacity:0.7;">${file.name}</span>`;
     listElement.appendChild(item);
     
-    // Simulates a quick successful attachment after half a second
     setTimeout(() => {
       item.classList.add('success');
       item.innerHTML = `<span>✅ Attached</span> <span style="font-weight:600;">${file.name}</span>`;
@@ -563,31 +583,46 @@ document.getElementById("otherFiles").addEventListener("change", function() {
 });
 
 /* ============================= */
-/* Submit Handler (Base64 Upload) */
+/* Submit Handler */
 /* ============================= */
 
 document.getElementById("docCollectForm").addEventListener("submit",async function(e){
   e.preventDefault();
 
-  if(!SCRIPT_URL) return alert("Configuration not loaded. Please check your URL.");
+  if(!SCRIPT_URL) return alert("Configuration not loaded.");
 
   const form = document.getElementById("docCollectForm");
   const submitBtn = document.getElementById("submitBtn");
   const submitBtnText = document.getElementById("submitBtnText");
 
-  // Disable button, gray it out, and show spinner
   submitBtn.disabled = true;
   submitBtn.classList.add("loading");
   submitBtnText.textContent = "Uploading & Submitting...";
 
-  // Validation and Phone Sanitization
   const cleanedPhone = cleanPhone(form.phone.value);
   if (cleanedPhone.length < 10) {
-    alert("Enter valid 10 digit mobile number");
+    alert("Enter valid number");
     submitBtn.disabled = false;
     submitBtn.classList.remove("loading");
     submitBtnText.textContent = "Submit Application";
     return;
+  }
+
+  // ✅ FIXED EXPERIENCE LOGIC
+  let experienceValue = form.experience.value;
+
+  if (experienceValue === "Above 2") {
+    const customVal = document.getElementById("experienceCustom").value;
+
+    if (!customVal || Number(customVal) <= 2) {
+      alert("Enter valid experience above 2 years");
+      submitBtn.disabled = false;
+      submitBtn.classList.remove("loading");
+      submitBtnText.textContent = "Submit Application";
+      return;
+    }
+
+    experienceValue = customVal;
   }
 
   try {
@@ -614,7 +649,7 @@ document.getElementById("docCollectForm").addEventListener("submit",async functi
       phone:cleanedPhone,
       email:form.email.value,
       role:form.role.value,
-      experience:form.experience.value,
+      experience:experienceValue,
       location:form.location.value,
       current_ctc:form.current_ctc.value||"",
       expected_ctc:form.expected_ctc.value||"",
@@ -633,27 +668,19 @@ document.getElementById("docCollectForm").addEventListener("submit",async functi
       body:JSON.stringify(payload)
     });
 
-    // SUCCESS UI: Hide Form, Show Congratulations State
     document.getElementById("docCollectForm").style.display = "none";
     document.getElementById("successState").style.display = "block";
-    
-    // (Optional) Scroll to top so they see the success message
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
   }
   catch(err){
-    alert("Upload failed. Please try again.");
-    console.error(err);
-    
-    // Revert Loading state so they can try again
+    alert("Upload failed");
     submitBtn.disabled = false;
     submitBtn.classList.remove("loading");
     submitBtnText.textContent = "Submit Application";
   } 
 });
 
-/* ============================= */
-/* Base64 Converter */
 /* ============================= */
 
 function toBase64(file){
@@ -668,24 +695,8 @@ function toBase64(file){
 function cleanPhone(value){
   if(!value) return '';
   let phone = value.replace(/\D/g,'');
-  if(phone.startsWith('91') && phone.length > 10){
-    phone = phone.slice(-10);
-  }
-  if(phone.length > 10){
-    phone = phone.slice(-10);
-  }
-  return phone;
+  return phone.slice(-10);
 }
-
-document.querySelector('input[name="phone"]').addEventListener('input', function(){
-  let value = this.value;
-  if(value.startsWith('+')){
-    value = '+' + value.slice(1).replace(/\D/g,'');
-  } else {
-    value = value.replace(/\D/g,'');
-  }
-  this.value = value;
-});
 
 </script>
 </body>
