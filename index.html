@@ -627,7 +627,19 @@ document.getElementById("docCollectForm").addEventListener("submit",async functi
   }
 
   try {
-    const payload={
+    const resumeFile = document.getElementById("resumeFile").files[0];
+
+if (!resumeFile) {
+  alert("Resume is required");
+  submitBtn.disabled = false;
+  submitBtn.classList.remove("loading");
+  submitBtnText.textContent = "Submit Application";
+  return;
+}
+
+const resumeB64 = await toBase64(resumeFile);
+
+const payload={
   name:form.name.value,
   phone:cleanedPhone,
   email:form.email.value,
@@ -636,7 +648,12 @@ document.getElementById("docCollectForm").addEventListener("submit",async functi
   location:form.location.value,
   current_ctc:form.current_ctc.value||"",
   expected_ctc:form.expected_ctc.value||"",
-  notice_period:form.notice_period.value||""
+  notice_period:form.notice_period.value||"",
+  resume:{
+    name:resumeFile.name,
+    mimeType:resumeFile.type,
+    data:resumeB64
+  }
 };
     console.log("SCRIPT_URL:", SCRIPT_URL);
 
