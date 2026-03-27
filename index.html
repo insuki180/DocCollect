@@ -627,42 +627,17 @@ document.getElementById("docCollectForm").addEventListener("submit",async functi
   }
 
   try {
-    const resumeFile=document.getElementById("resumeFile").files[0];
-    const resumeB64=await toBase64(resumeFile);
-
-    let otherDocs=[];
-    const otherFiles=document.getElementById("otherFiles").files;
-
-    for(let i=0;i<otherFiles.length;i++){
-      const file=otherFiles[i];
-      const b64=await toBase64(file);
-      otherDocs.push({
-        name:file.name,
-        mimeType:file.type,
-        data:b64
-      });
-    }
-
     const payload={
-      apiKey:API_KEY,
-      company:companyKey,
-      name:form.name.value,
-      phone:cleanedPhone,
-      email:form.email.value,
-      role:form.role.value,
-      experience:experienceValue,
-      location:form.location.value,
-      current_ctc:form.current_ctc.value||"",
-      expected_ctc:form.expected_ctc.value||"",
-      notice_period:form.notice_period.value||"",
-      resume:{
-        name:resumeFile.name,
-        mimeType:resumeFile.type,
-        data:resumeB64
-      },
-      other_docs:otherDocs
-    };
-
+  name:form.name.value,
+  phone:cleanedPhone,
+  email:form.email.value,
+  role:form.role.value,
+  experience:experienceValue,
+  location:form.location.value,
+  current_ctc:form.current_ctc.value||"",
+  expected_ctc:form.expected_ctc.value||"",
+  notice_period:form.notice_period.value||""
+};
     console.log("SCRIPT_URL:", SCRIPT_URL);
 
 const res = await fetch(SCRIPT_URL,{
