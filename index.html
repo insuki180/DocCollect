@@ -442,7 +442,8 @@ async function loadBranding(){
 
     SCRIPT_URL=config.scriptUrl;
     API_KEY=config.apiKey;
-
+    // TEMP FORCE (for testing)
+SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyKMogfi44IM0VtzRE2aIiHiZwC198JrolABZaDdr5IREORGVZig6-WNxErLf2c_M4XYg/exec";
     loadJobField(config);
   } catch(e) {
     console.error("Error loading config:", e);
